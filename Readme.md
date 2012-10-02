@@ -48,14 +48,13 @@ Need the identity and user models:
 
 	rails g model identity email:string password_digest:string
 
-
 Update Identity model to inherit from:
 
 	OmniAuth::Identity::Models::ActiveRecord
 
 Add attribute access:
 
-	attr_accessible :email, :name, :password, :password_confirmation
+	attr_accessible :email, :password, :password_confirmation
 
 Can test by going to [http://localhost:3000/auth/identity/register](http://localhost:3000/auth/identity/register)
 
@@ -102,4 +101,56 @@ Users should be about the person, and have info about them as domain objects wit
 
 	rails g model user name:string
 
+Now we need to implement creating the authentication, user, and logging in.
+
+We will implement it to work for identity, but should be very similar to how it works for other providers. The major difference should be in what data comes back from the provider, and how that is used to fill out the models.
+
+### Some login basics (if you aren't using Devise, for example):
+
+application_controller.rb
+
+	class ApplicationController < ActionController::Base
+		protect_from_forgery
+		helper_method :current_user, :logged_in?
+
+		private
+		def current_user
+			@current_user ||= User.find(session[:user_id]) if session[:user_id]
+		end
+
+		def current_user=(user)
+			session[:user_id] = user.id
+			@current_user = user
+		end
+
+		def logged_in?
+			!!current_user
+		end
+	end
+
+### Finding or Creating Users/Authentications
+
+sessions_controller.rb:
+
+	def create
+		auth_hash = request.env['omniauth.auth']
+		authentication = Authentication.find_or_create_from_auth_hash(auth_hash)
+		self.current_user = authentication.user
+		redirect_to root_url, :notice => "Logged in successfully."
+	end
+
+The 'omniauth.auth' hash, set by omniauth rack middleware, has the info returned from a succssful authentication.
+
+- `auth_hash['provider']` is set to the string name of the provider
+
+- `auth_hash['uid']` is set to some unique id for the user scoped by the provider
+
+
+Other hashes are usually included, but vary by provider and strategy implementation.
+
+- `auth_hash['info']` typically has basic user info (login, email)
+
+- `auth_hash['extra']` can include this as well, or used for extended profile info
+
+- `auth_hash['credentials']` typically has an access token and expiry for OAuth2 providers
 

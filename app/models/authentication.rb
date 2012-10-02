@@ -16,8 +16,6 @@ class Authentication < ActiveRecord::Base
       auth_create_attributes = {
         :provider   => auth_hash['provider'],
         :uid        => auth_hash['uid']
-        # :token      => auth_hash['credentials']['token'],
-        # :expires_at => auth_hash['credentials']['expires'] ? auth_hash['credentials']['expires'] : nil
       }
       
       auth = user.authentications.create!(auth_create_attributes)
