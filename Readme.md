@@ -191,6 +191,10 @@ user.rb
 
 # Adding another provider: omniauth-github
 
+For oauth(2), you need to be deployed, so I have the demo app on heroku:
+
+	http://omniauthdemo.herokuapp.com/
+
 Add the strategy gem and bundle:
 
 	gem 'omniauth-github'
@@ -213,3 +217,56 @@ heroku cmd line:
 	heroku config:add GITHUB_KEY=abcdefghijklmnop
 	heroku config:add GITHUB_SECRET=abcdefghijklmnopabcdefghijklmnopabcdefghijklmnop
 
+Add a link to github from the `sessions#new` page:
+
+	<h3>External Providers</h3>
+	<p><%= link_to "login", "/auth/github" %> with github.</p>
+
+
+I temporarily logged the auth_hash, to give a sense of what is in there:
+
+	--- !map:OmniAuth::AuthHash 
+	provider: github
+	uid: "46439"
+	info: !map:OmniAuth::AuthHash::InfoHash 
+		nickname: kookster
+		email: andrew_AT_beginsinwonder_DOT_com
+		name: Andrew Kuklewicz
+		image: https://secure.gravatar.com/avatar/abcdefghiklmnopqrstuvwxyz?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png
+		urls: !map:Hashie::Mash 
+			GitHub: https://github.com/kookster
+			Blog: http://beginsinwonder.com
+	credentials: !map:Hashie::Mash 
+		token: abcdefghiklmnopqrstuvwxyz
+		expires: false
+	extra: !map:Hashie::Mash 
+		raw_info: !map:Hashie::Mash 
+			type: User
+			login: kookster
+			owned_private_repos: 0
+			followers: 11
+			created_at: "2009-01-14T06:39:27Z"
+			company: http://www.prx.org
+			email: andrew_AT_beginsinwonder_DOT_com
+			disk_usage: 59516
+			plan: !map:Hashie::Mash 
+				private_repos: 0
+				space: 307200
+				name: free
+				collaborators: 0
+			public_gists: 1
+			blog: http://beginsinwonder.com
+			hireable: false
+			avatar_url: https://secure.gravatar.com/avatar/abcdefghiklmnopqrstuvwxyz?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png
+			private_gists: 0
+			following: 8
+			html_url: https://github.com/kookster
+			name: Andrew Kuklewicz
+			bio: Tech Dir @ prx.org
+			collaborators: 0
+			public_repos: 10
+			id: 46439
+			total_private_repos: 0
+			location: Boston, MA
+			url: https://api.github.com/users/kookster
+			gravatar_id: abcdefghiklmnopqrstuvwxyz
