@@ -29,6 +29,19 @@ Authentication with OmniAuth
  - thoughtbot/clearance
  - dockyard/easy_auth
 
+# OmniAuth?
+ 
+- https://github.com/intridea/omniauth
+- https://github.com/intridea/omniauth/wiki
+
+#### "OmniAuth is a Ruby authentication framework aimed to abstract away the difficulties of working with various types of authentication providers. It is meant to be hooked up to just about any system, from social networks to enterprise systems to simple username and password authentication."
+
+
+- Implemented using a base gem, and pluggable strategies.
+- Each strategy is a different gem.
+- Does not provide user models, or other convenience methods (e.g. `logged_in?`, `current_user`)
+- Works with Devise, CanCan, etc.
+
 # Create Project and Install OmniAuth
 
 	rails new Project
@@ -54,9 +67,10 @@ config/initializers/omniauth.rb:
 
 # Identity Model
 
-OmniAuth::Identity is implemented like an external provider, but is resident in your app
+OmniAuth::Identity is implemented like an external provider, but it is resident in your app.
+Stores email, hashed password, and potentially other info in a model (many persistence options).
 
-Need the identity and user models:
+Make an `Identity` model:
 
 	rails g model identity email:string password_digest:string
 
@@ -64,18 +78,20 @@ Update Identity model to inherit from:
 
 	OmniAuth::Identity::Models::ActiveRecord
 
-Add attribute access:
+Add attribute access (this is wrong on the identity gem docs):
 
 	attr_accessible :email, :password, :password_confirmation
 
+OmniAuth uses the `/auth/:provider` path as the link to follow to start the authentication process for a provider.
+
 Can test by going to [http://localhost:3000/auth/identity/register](http://localhost:3000/auth/identity/register)
+
 
 # Sessions
 
 Need a sessions controller and actions for new, create, destroy, failure:
 
 	rails g controller Sessions new create destroy failure
-
 
 Session new page that links to: `/auth/identity/register`
 
