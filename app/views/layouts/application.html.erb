@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OmniAuthDemo</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<% unless flash[:notice].blank? %>
+  <div class="info">
+    <%= content_tag :div, flash[:notice] %>
+  </div>
+<% end %>
+
+<% unless flash[:error].blank? %>
+  <div class="error">
+    <%= content_tag :div, flash[:error] %>
+  </div>
+<% end %>
+
+
+<%= yield %>
+
+</body>
+</html>

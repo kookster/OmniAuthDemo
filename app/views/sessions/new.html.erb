@@ -1,0 +1,13 @@
+<div>
+<% if logged_in? %>
+
+  <b><%= current_user.name %></b> is logged in.
+
+<% else %>
+
+  <h3>Don&rsquo;t use these services?</h3>
+  <%= link_to "Create an account", "/auth/identity/register" %> or
+  <%= link_to "login", "/auth/identity" %> with a password.
+
+<% end %>
+</div>
