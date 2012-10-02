@@ -210,6 +210,8 @@ user.rb
 
 # Adding another provider: omniauth-github
 
+Here is the gem: https://github.com/intridea/omniauth-github
+
 For oauth, nice to be deployed to register an app, so I have the demo app on heroku:
 
 	http://omniauthdemo.herokuapp.com/
@@ -222,7 +224,7 @@ Add it to the config/init
 	
 	provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], :scope => 'user,repo,gist'
 
-Now go create an app on github, and get the key and secret.
+Now go create an app on github, and get the key and secret: https://github.com/settings/applications
 
 Set these in your local env, and on heroku:
 
@@ -241,8 +243,10 @@ Add a link to github from the `sessions#new` page:
 	<h3>External Providers</h3>
 	<p><%= link_to "login", "/auth/github" %> with github.</p>
 
+### That ought to do it - pretty much everything else we wrote carries over!
 
-I temporarily logged the auth_hash, to give a sense of what is in there:
+
+FYI - I temporarily logged the auth_hash, to give a sense of what is in there:
 
 	--- !map:OmniAuth::AuthHash 
 	provider: github
