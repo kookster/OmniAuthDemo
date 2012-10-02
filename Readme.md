@@ -48,22 +48,24 @@ Authentication with OmniAuth
 
 Add to Gemfile and bundle:
 
-	gem 'bcrypt-ruby', '~> 3.0.0'
+```ruby
+gem 'bcrypt-ruby', '~> 3.0.0'
 
-	gem 'omniauth'
+gem 'omniauth'
 
-	gem 'omniauth-identity'
-
+gem 'omniauth-identity'
+```
 
 Now add the rack middleware and options in an initializer.
 You can specify what fields to care about, and these show up in the default form.
 
 config/initializers/omniauth.rb:
 
-	Rails.application.config.middleware.use OmniAuth::Builder do
-		provider :identity, :fields => [:name, :email]
-	end
-
+```ruby
+Rails.application.config.middleware.use OmniAuth::Builder do
+	provider :identity, :fields => [:name, :email]
+end
+```
 
 # Identity Model
 
@@ -76,11 +78,15 @@ Make an `Identity` model:
 
 Update Identity model to inherit from:
 
-	OmniAuth::Identity::Models::ActiveRecord
+```ruby
+OmniAuth::Identity::Models::ActiveRecord
+```
 
 Add attribute access (this is wrong on the identity gem docs):
 
-	attr_accessible :email, :password, :password_confirmation
+```ruby
+attr_accessible :email, :password, :password_confirmation
+```
 
 OmniAuth uses the `/auth/:provider` path as the link to follow to start the authentication process for a provider.
 
@@ -98,21 +104,23 @@ Session new page that links to: `/auth/identity/register`
 After you register, tries to take you to a strategy specific callback: `/auth/identity/callback`
 
 routes.rb:
+```ruby
+match '/auth/:provider/callback', :to => 'sessions#create'
+match '/auth/failure', :to => 'sessions#failure'
+match '/logout', :to => 'sessions#destroy', :as => 'logout'
 
-	match '/auth/:provider/callback', :to => 'sessions#create'
-	match '/auth/failure', :to => 'sessions#failure'
-	match '/logout', :to => 'sessions#destroy', :as => 'logout'
-
-	root :to => 'sessions#new'
+root :to => 'sessions#new'
+```
 
 This is a bit sneaky: `sessions#create` method for all providers, but could have done one per provider, if that would have helped.
 	
 Also - when there is an error - a rack var has the login info:
 
-	def new
-		@identity = env['omniauth.identity']
-	end
-
+```ruby
+def new
+	@identity = env['omniauth.identity']
+end
+```
 
 # Users and Authentications
 
@@ -135,51 +143,52 @@ We will implement it to work for identity, but should be very similar to how it 
 ### Some login basics (if you aren't using Devise, for example):
 
 application_controller.rb
+```ruby
+class ApplicationController < ActionController::Base
+	protect_from_forgery
+	helper_method :current_user, :logged_in?
 
-	class ApplicationController < ActionController::Base
-		protect_from_forgery
-		helper_method :current_user, :logged_in?
-
-		private
-		def current_user
-			@current_user ||= User.find(session[:user_id]) if session[:user_id]
-		end
-
-		def current_user=(user)
-			session[:user_id] = user.id
-			@current_user = user
-		end
-
-		def logged_in?
-			!!current_user
-		end
+	private
+	def current_user
+		@current_user ||= User.find(session[:user_id]) if session[:user_id]
 	end
+
+	def current_user=(user)
+		session[:user_id] = user.id
+		@current_user = user
+	end
+
+	def logged_in?
+		!!current_user
+	end
+end
+```
 
 ### Show when we are logged in
 
 app/views/sessions/new.erb:
+```ruby
+<div>
+<% if logged_in? %>
 
-	<div>
-	<% if logged_in? %>
+	<b><%= current_user.name %></b> is logged in.
 
-		<b><%= current_user.name %></b> is logged in.
-
-	<% else %>
-		...
-	<% end %>
-	</div>
-
-
+<% else %>
+	...
+<% end %>
+</div>
+```
 ### Finding or Creating Users/Authentications
 
 sessions_controller.rb:
-
-	def create
-		auth_hash = request.env['omniauth.auth']
-		authentication = Authentication.find_or_create_from_auth_hash(auth_hash)
-		self.current_user = authentication.user
-		redirect_to root_url, :notice => "Logged in successfully."
-	end
+```ruby
+def create
+	auth_hash = request.env['omniauth.auth']
+	authentication = Authentication.find_or_create_from_auth_hash(auth_hash)
+	self.current_user = authentication.user
+	redirect_to root_url, :notice => "Logged in successfully."
+end
+```
 
 The 'omniauth.auth' hash, set by omniauth rack middleware, has the info returned from a succssful authentication.
 
@@ -199,30 +208,31 @@ Other hashes are usually included, but vary by provider and strategy implementat
 Use these in the models to find/create the `Authentication` & `User`.
 
 authentication.rb
+```ruby
+def self.find_or_create_from_auth_hash(auth_hash)
+	auth = find_by_provider_and_uid(auth_hash['provider'], auth_hash['uid'].to_s)
+	unless auth
+		user = User.find_or_create_from_auth_hash(auth_hash)
 
-	def self.find_or_create_from_auth_hash(auth_hash)
-		auth = find_by_provider_and_uid(auth_hash['provider'], auth_hash['uid'].to_s)
-		unless auth
-			user = User.find_or_create_from_auth_hash(auth_hash)
-
-			auth_create_attributes = {
-				:provider   => auth_hash['provider'],
-				:uid        => auth_hash['uid']
-			}
-			
-			auth = user.authentications.create!(auth_create_attributes)
-		end
-		auth
+		auth_create_attributes = {
+			:provider   => auth_hash['provider'],
+			:uid        => auth_hash['uid']
+		}
+		
+		auth = user.authentications.create!(auth_create_attributes)
 	end
+	auth
+end
+```
 
 user.rb
-
-	def self.find_or_create_from_auth_hash(auth_hash)
-		info = auth_hash['info']
-		name = info['name'] || info['email']
-		find_or_create_by_name(name)
-	end
-
+```ruby
+def self.find_or_create_from_auth_hash(auth_hash)
+	info = auth_hash['info']
+	name = info['name'] || info['email']
+	find_or_create_by_name(name)
+end
+```
 
 # Adding another provider: omniauth-github
 
@@ -255,15 +265,16 @@ heroku cmd line:
 	heroku config:add GITHUB_SECRET=abcdefghijklmnopabcdefghijklmnopabcdefghijklmnop
 
 Add a link to github from the `sessions#new` page:
-
-	<h3>External Providers</h3>
-	<p><%= link_to "login", "/auth/github" %> with github.</p>
+```ruby
+<h3>External Providers</h3>
+<p><%= link_to "login", "/auth/github" %> with github.</p>
+```
 
 ### That ought to do it - pretty much everything else we wrote carries over!
 
 
 FYI - I temporarily logged the auth_hash, to give a sense of what is in there:
-
+```yaml
 	--- !map:OmniAuth::AuthHash 
 	provider: github
 	uid: "46439"
@@ -309,6 +320,7 @@ FYI - I temporarily logged the auth_hash, to give a sense of what is in there:
 			location: Boston, MA
 			url: https://api.github.com/users/kookster
 			gravatar_id: abcdefghiklmnopqrstuvwxyz
+```
 
 # Next?
 
