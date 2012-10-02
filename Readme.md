@@ -29,7 +29,7 @@ Authentication with OmniAuth
 
 	rails new Project
 
-Add to Gemfile:
+Add to Gemfile and bundle:
 
 	gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -37,7 +37,15 @@ Add to Gemfile:
 
 	gem 'omniauth-identity'
 
-bundle...
+
+Now add the rack middleware and options in an initializer.
+You can specify what fields to care about, and these show up in the default form.
+
+config/initializers/omniauth.rb:
+
+	Rails.application.config.middleware.use OmniAuth::Builder do
+		provider :identity, :fields => [:name, :email]
+	end
 
 
 # Identity Model
@@ -153,4 +161,55 @@ Other hashes are usually included, but vary by provider and strategy implementat
 - `auth_hash['extra']` can include this as well, or used for extended profile info
 
 - `auth_hash['credentials']` typically has an access token and expiry for OAuth2 providers
+
+Use these in the models to find/create the `Authentication` & `User`.
+
+authentication.rb
+
+	def self.find_or_create_from_auth_hash(auth_hash)
+		auth = find_by_provider_and_uid(auth_hash['provider'], auth_hash['uid'].to_s)
+		unless auth
+			user = User.find_or_create_from_auth_hash(auth_hash)
+
+			auth_create_attributes = {
+				:provider   => auth_hash['provider'],
+				:uid        => auth_hash['uid']
+			}
+			
+			auth = user.authentications.create!(auth_create_attributes)
+		end
+		auth
+	end
+
+user.rb
+
+	def self.find_or_create_from_auth_hash(auth_hash)
+		info = auth_hash['info']
+		name = info['name'] || info['email']
+		find_or_create_by_name(name)
+	end
+
+# Adding another provider: omniauth-github
+
+Add the strategy gem and bundle:
+
+	gem 'omniauth-github'
+
+Add it to the config/init
+	
+	provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], :scope => 'user,repo,gist'
+
+Now go create an app on github, and get the key and secret.
+
+Set these in your local env, and on heroku:
+
+.rvmrc (or equivalent)
+
+	export GITHUB_KEY=abcdefghijklmnop
+	export GITHUB_SECRET=abcdefghijklmnopabcdefghijklmnopabcdefghijklmnop
+
+heroku cmd line:
+
+	heroku config:add GITHUB_KEY=abcdefghijklmnop
+	heroku config:add GITHUB_SECRET=abcdefghijklmnopabcdefghijklmnopabcdefghijklmnop
 

@@ -7,8 +7,6 @@ class Authentication < ActiveRecord::Base
   validates_uniqueness_of :uid, :scope => :provider
 
   def self.find_or_create_from_auth_hash(auth_hash)
-    logger.debug("auth_hash: #{auth_hash.inspect}")
-
     auth = find_by_provider_and_uid(auth_hash['provider'], auth_hash['uid'].to_s)
     unless auth
       user = User.find_or_create_from_auth_hash(auth_hash)
