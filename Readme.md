@@ -19,30 +19,26 @@ Authentication with OmniAuth
 
 # Auth Options
 
- - plataformatec/devise
- - intridea/omniauth
- - binarylogic/authlogic
- - NoamB/sorcery
+ - https://github.com/plataformatec/devise
+ - https://github.com/intridea/omniauth
+ - https://github.com/binarylogic/authlogic
+ - https://github.com/NoamB/sorcery
 
 # Local Faves
 
- - thoughtbot/clearance
- - dockyard/easy_auth
+ - https://github.com/thoughtbot/clearance
+ - https://github.com/dockyard/easy_auth
 
 # OmniAuth?
  
-- https://github.com/intridea/omniauth
-- https://github.com/intridea/omniauth/wiki
-
 #### "OmniAuth is a Ruby authentication framework aimed to abstract away the difficulties of working with various types of authentication providers. It is meant to be hooked up to just about any system, from social networks to enterprise systems to simple username and password authentication."
-
 
 - Implemented using a base gem, and pluggable strategies.
 - Each strategy is a different gem.
 - Does not provide user models, or other convenience methods (e.g. `logged_in?`, `current_user`)
 - Works with Devise, CanCan, etc.
 
-# Create Project and Install OmniAuth
+# Create Project, Install OmniAuth & Identity
 
 	rails new Project
 
