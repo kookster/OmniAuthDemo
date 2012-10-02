@@ -85,8 +85,7 @@ routes.rb:
 
 	root :to => 'sessions#new'
 
-
-(Don't forget to delete the `public/index.html` to make root work.)
+This is a bit sneaky: `sessions#create` method for all providers, but could have done one per provider, if that would have helped.
 	
 Also - when there is an error - a rack var has the login info:
 
@@ -135,6 +134,21 @@ application_controller.rb
 			!!current_user
 		end
 	end
+
+### Show when we are logged in
+
+app/views/sessions/new.erb:
+
+	<div>
+	<% if logged_in? %>
+
+		<b><%= current_user.name %></b> is logged in.
+
+	<% else %>
+		...
+	<% end %>
+	</div>
+
 
 ### Finding or Creating Users/Authentications
 
@@ -189,9 +203,10 @@ user.rb
 		find_or_create_by_name(name)
 	end
 
+
 # Adding another provider: omniauth-github
 
-For oauth(2), you need to be deployed, so I have the demo app on heroku:
+For oauth, nice to be deployed to register an app, so I have the demo app on heroku:
 
 	http://omniauthdemo.herokuapp.com/
 
@@ -270,3 +285,18 @@ I temporarily logged the auth_hash, to give a sense of what is in there:
 			location: Boston, MA
 			url: https://api.github.com/users/kookster
 			gravatar_id: abcdefghiklmnopqrstuvwxyz
+
+# What more can you do?
+
+- Explore what strategies are available:
+	- https://github.com/intridea/omniauth/wiki/List-of-Strategies
+
+- Make your own strategies:
+	- Guide: https://github.com/intridea/omniauth/wiki/Strategy-Contribution-Guide
+	- Mine: https://github.com/PRX/omniauth-prx
+	- Use abstract OAuth2 strategy: https://github.com/intridea/omniauth-oauth2
+
+- Integrate with Devise: https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
+
+- Capture the credentials/tokens to make API calls
+
