@@ -167,7 +167,7 @@ end
 ### Show when we are logged in
 
 app/views/sessions/new.erb:
-```ruby
+```erb
 <div>
 <% if logged_in? %>
 
@@ -265,7 +265,7 @@ heroku cmd line:
 	heroku config:add GITHUB_SECRET=abcdefghijklmnopabcdefghijklmnopabcdefghijklmnop
 
 Add a link to github from the `sessions#new` page:
-```ruby
+```erb
 <h3>External Providers</h3>
 <p><%= link_to "login", "/auth/github" %> with github.</p>
 ```
