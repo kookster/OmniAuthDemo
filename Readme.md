@@ -16,6 +16,7 @@ Authentication with OmniAuth
  - Be able to authenticate using multiple means and external services
  - Have app specific login/password as a fallback
  - OmniAuth does both well.
+ - Is this a good idea? https://blog.mailchimp.com/social-login-buttons-arent-worth-it
 
 # Auth Options
 
