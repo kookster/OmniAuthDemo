@@ -1,6 +1,10 @@
 Authentication with OmniAuth
 =========================== 
 
+# Basic Demo
+
+- http://omniauthdemo.herokuapp.com/
+
 # Intro
 	
 - Authentication, Authorization, Identity, Profile
@@ -286,17 +290,26 @@ I temporarily logged the auth_hash, to give a sense of what is in there:
 			url: https://api.github.com/users/kookster
 			gravatar_id: abcdefghiklmnopqrstuvwxyz
 
-# What more can you do?
+# Next?
 
-- Explore what strategies are available:
+- Explore gem, and what strategies are available:
+	- https://github.com/intridea/omniauth
+	- https://github.com/intridea/omniauth/wiki
 	- https://github.com/intridea/omniauth/wiki/List-of-Strategies
 
-- Make your own strategies:
-	- Guide: https://github.com/intridea/omniauth/wiki/Strategy-Contribution-Guide
-	- Mine: https://github.com/PRX/omniauth-prx
-	- Use abstract OAuth2 strategy: https://github.com/intridea/omniauth-oauth2
+- Railscasts!
+	- http://railscasts.com/episodes/235-omniauth-part-1
+	- http://railscasts.com/episodes/236-omniauth-part-2
+	- http://railscasts.com/episodes/241-simple-omniauth
+	- http://railscasts.com/episodes/304-omniauth-identity
 
-- Integrate with Devise: https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
+- Make your own strategies
+	- Guide: https://github.com/intridea/omniauth/wiki/Strategy-Contribution-Guide
+	- Abstract OAuth2 Strategy: https://github.com/intridea/omniauth-oauth2
+	- Mine: https://github.com/PRX/omniauth-prx
+
+- Integrate with Devise
+	- https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
 
 - Capture the credentials/tokens to make API calls
 
