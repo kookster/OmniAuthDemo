@@ -69,7 +69,7 @@ end
 
 # Identity Model
 
-OmniAuth::Identity is implemented like an external provider, but it is resident in your app.
+`OmniAuth::Identity` is implemented like an external provider, but it is resident in your app.
 Stores email, hashed password, and potentially other info in a model (many persistence options).
 
 Make an `Identity` model:
@@ -240,7 +240,7 @@ Here is the gem: https://github.com/intridea/omniauth-github
 
 For oauth, nice to be deployed to register an app, so I have the demo app on heroku:
 
-	http://omniauthdemo.herokuapp.com/
+http://omniauthdemo.herokuapp.com/
 
 Add the strategy gem and bundle:
 
