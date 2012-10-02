@@ -2,10 +2,10 @@ Authentication with OmniAuth
 =========================== 
 
 # Intro
-  
-  - Authentication, Authorization, Identity, Profile
-  - Security, Password reuse, Encryption, Privacy
-  - Protocols - OpenId, OAuth(2), CAS, Mozilla Persona (browserid)
+	
+- Authentication, Authorization, Identity, Profile
+- Security, Password reuse, Encryption, Privacy
+- Protocols - OpenId, OAuth(2), CAS, Mozilla Persona (browserid)
 
 # Demo Goals
 
@@ -27,7 +27,7 @@ Authentication with OmniAuth
 
 # Create Project and Install OmniAuth
 
-  rails new Project
+	rails new Project
 
 Add to Gemfile:
 
@@ -44,9 +44,10 @@ bundle...
 
 OmniAuth::Identity is implemented like an external provider, but is resident in your app
 
-Need the identity and user models
+Need the identity and user models:
 
 	rails g model identity email:string password_digest:string
+
 
 Update Identity model to inherit from:
 
@@ -60,30 +61,31 @@ Can test by going to [http://localhost:3000/auth/identity/register](http://local
 
 # Sessions
 
-Need a sessions controller and actions for new, create, destroy, failure
+Need a sessions controller and actions for new, create, destroy, failure:
 
-  rails g controller Sessions new create destroy failure
+	rails g controller Sessions new create destroy failure
 
-Session new page that links to:	/auth/identity/register
 
-After you register, tries to take you to a strategy specific callback: /auth/identity/callback
+Session new page that links to: `/auth/identity/register`
 
-routes.rb
+After you register, tries to take you to a strategy specific callback: `/auth/identity/callback`
 
-  match '/auth/:provider/callback', :to => 'sessions#create'
-  match '/auth/failure', :to => 'sessions#failure'
-  match '/logout', :to => 'sessions#destroy', :as => 'logout'
+routes.rb:
 
-  root :to => 'sessions#new'
+	match '/auth/:provider/callback', :to => 'sessions#create'
+	match '/auth/failure', :to => 'sessions#failure'
+	match '/logout', :to => 'sessions#destroy', :as => 'logout'
+
+	root :to => 'sessions#new'
+
 
 (Don't forget to delete the `public/index.html` to make root work.)
-
-  
+	
 Also - when there is an error - a rack var has the login info:
 
-  def new
-    @identity = env['omniauth.identity']
-  end
+	def new
+		@identity = env['omniauth.identity']
+	end
 
 
 # Users and Authentications
@@ -94,10 +96,10 @@ Devise works this way with OmniAuth, and it makes sense with the goal of one Use
 
 An authentication has the relationship to the user, the name/identifier of the provider, and the UID for the user from thaty provider.  This works for the identity strategy, and external strategies (e.g. {user_id:[user.id], provider:'identity', oid:[identity.id]}):
 
-  rails g model authentication user_id:integer provider:string uid:string
+	rails g model authentication user_id:integer provider:string uid:string
 
 Users should be about the person, and have info about them as domain objects with biz rules, not about how they login to some site:
 
-  rails g model user name:string
+	rails g model user name:string
 
 
