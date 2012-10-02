@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user=(user)
-    session[:user_id] = user.id
+    session[:user_id] = user ? user.id : nil
     @current_user = user
   end
 
