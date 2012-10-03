@@ -5,18 +5,13 @@ Authentication with OmniAuth
 
 - http://omniauthdemo.herokuapp.com/
 
-# Intro
-	
-- Authentication, Authorization, Identity, Profile
-- Security, Password reuse, Encryption, Privacy
-- Protocols - OpenId, OAuth(2), CAS, Mozilla Persona (browserid)
-
 # Demo Goals
 
  - Be able to authenticate using multiple means and external services
  - Have app specific login/password as a fallback
  - OmniAuth does both well.
- - Is this a good idea? https://blog.mailchimp.com/social-login-buttons-arent-worth-it
+ - Are social logins a good idea? https://blog.mailchimp.com/social-login-buttons-arent-worth-it
+ - Regardless, great for SSO, or for adding integration with other services
 
 # Auth Options
 
